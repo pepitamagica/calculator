@@ -1,4 +1,4 @@
-const calculatorKeys = document.querySelectorAll(".calculator-btn");
+const calculatorKeys = document.querySelector(".calculator-keyboard");
 const calculatorDisplay = document.querySelector(".calculator-display");
 
 let lastOperator = ""
@@ -10,24 +10,25 @@ let oldValue
     , result = 0;
 
 resetDisplay();
-calculatorKeys.forEach(function(key) {
-    key.addEventListener("click", function() {
-        if (isNumber(key.value)) {
-            calculatorDisplay.valueAsNumber += key.value;
+
+calculatorKeys.addEventListener("click", function(event) {
+    if (event.target.tagName === "BUTTON") {
+        if (isNumber(event.target.value)) {
+            calculatorDisplay.valueAsNumber += event.target.value;
             if (lastOperator) {
                 if (nextOperator && newValueInput === false) {
                     newValue = 0;
                     newValueInput = true;
-                } 
-                newValue += key.value;
+                }
+                newValue += event.target.value;
                 newValue = Number(newValue);
                 calculatorDisplay.valueAsNumber = newValue;
             }
         } else {
-            calculate(key.value, calculatorDisplay.valueAsNumber);
+            calculate(event.target.value, calculatorDisplay.valueAsNumber);
             newValueInput = false;
         }
-    });
+    }
 });
 
 function isNumber(keyPressed) {
@@ -50,7 +51,7 @@ function calculate(operator, displayValue) {
             break;
         case "%":
             calculatorDisplay.valueAsNumber = percentage(displayValue);
-            break;            
+            break;
         case "=":
             equal(displayValue);
             break;
@@ -87,7 +88,7 @@ function percentage(displayValue) {
 }
 
 function divide() {
-    result /= newValue; 
+    result /= newValue;
     if (result === Infinity)
         calculatorDisplay.placeholder = "Infinity";
     else
